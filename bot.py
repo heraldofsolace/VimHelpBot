@@ -39,8 +39,8 @@ for comment in subreddit.stream.comments(skip_existing=True):
         # Create the link by by adjoining .txt after the matched part.
         # TODO: Is this the correct approach?
         link = "https://vimhelp.org/{}.txt.html".format(topic)
-        request = requests.get(link)
-        if request.status_code == 200:
+        request = requests.head(link)
+        if request.ok:
             reply = "Help for {}: {} \n\n".format(topic, link)
             text += reply
             replied_topics.append(topic)
