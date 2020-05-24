@@ -2,6 +2,7 @@
 
 import praw
 import re
+import requests
 
 reddit = praw.Reddit('bot1')
 
@@ -21,6 +22,11 @@ for comment in subreddit.stream.comments(skip_existing=True):
     for match in matches:
         # Create the link by by adjoining .txt after the matched part.
         # TODO: Is this the correct approach?
-
-        link = "Help for {topic} https://vimhelp.org/{topic}.txt.html \n\n I'm a bot.".format(topic = match)
-        comment.reply(link)
+        link = "https://vimhelp.org/{}.txt.html".format(match)
+        request = requests.get(link)
+        if request.status_code == 200:
+            reply = "Help for {}: {} \n\n I'm a bot.".format(match, link)
+            print(reply)
+            comment.reply(reply)
+        else:
+            print("Link not found")
