@@ -9,7 +9,7 @@ from urllib.parse import quote
 reddit = praw.Reddit('bot1')
 
 # Currently point to this subreddit which allows bot testing
-subreddit = reddit.subreddit("pythonforengineers")
+subreddit = reddit.subreddit("vim")
 
 conn = sqlite3.connect("tags.db")
 c = conn.cursor()
