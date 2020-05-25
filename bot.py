@@ -43,7 +43,7 @@ for comment in subreddit.stream.comments(skip_existing=True):
         # Create the link by by adjoining .txt after the matched part.
         # TODO: Is this the correct approach?
         t = (topic,)
-        
+
         # Search in DB
         result = c.execute('select * from tags where tag=?', t).fetchone()
         print(result)
@@ -52,18 +52,24 @@ for comment in subreddit.stream.comments(skip_existing=True):
         else:
             doc = result[0]
             link = "https://vimhelp.org/{}.txt.html#{}".format(quote(doc),quote(topic))
-            
+
             request = requests.head(link)
+            if not request.ok:
+                topic_single_quotes = "'" + topic + "'"
+                link = "https://vimhelp.org/{}.txt.html#{}".format(quote(doc),quote(topic_single_quotes))
+                request = requests.head(link)
+                print("Link not found with the base topic")
+
             if request.ok:
                 reply = "Help for `{}`: {} \n\n".format(topic, link)
                 text += reply
                 replied_topics.append(topic)
             else:
-                print("Link not found")
-    
+                print("Link not found with surrounding single quotes")
+
     # Link not found for all the topics
     if len(text) == 0:
         continue
-    
+
     text += "I'm a bot. Check out my pinned post for more information"
     comment.reply(text)
