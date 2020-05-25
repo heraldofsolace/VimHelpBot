@@ -64,6 +64,6 @@ for comment in subreddit.stream.comments(skip_existing=True):
     # Link not found for all the topics
     if len(text) == 0:
         continue
-
-    text += "I'm a bot."
+    
+    text += "I'm a bot. Check out my pinned post for more information"
     comment.reply(text)
