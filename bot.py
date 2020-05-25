@@ -16,8 +16,8 @@ c = conn.cursor()
 # Regex to match
 # First match inside backticks. If that fails fallback to match until first space.
 # TODO: Does it match every topic?
-match_text_with_backtick = r"`:(h|he|hel|help) (.*?)`"
-match_text_with_space = ":(h|he|hel|help) ([^\s]+)"
+match_text_with_backtick = r"`:(h|he|hel|help)(.*?)?`"
+match_text_with_space = r":(h|he|hel|help)\s*([^\s]+)?"
 
 match_re_space = re.compile(match_text_with_space, re.IGNORECASE)
 match_re_backtick = re.compile(match_text_with_backtick, re.IGNORECASE)
@@ -35,8 +35,10 @@ for comment in subreddit.stream.comments(skip_existing=True):
     text = ""
     replied_topics = []
     for match in matches:
-        topic = match[1]
-
+        topic = match[1].strip()
+        if topic == '':
+            # Called with no argument
+            topic = "help.txt"
         # Already replied. Skip
         if topic in replied_topics:
             continue
