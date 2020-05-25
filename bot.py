@@ -9,15 +9,15 @@ from urllib.parse import quote
 reddit = praw.Reddit('bot1')
 
 # Currently point to this subreddit which allows bot testing
-subreddit = reddit.subreddit("vim")
+subreddit = reddit.subreddit("pythonforengineers")
 
 conn = sqlite3.connect("tags.db")
 c = conn.cursor()
 # Regex to match
 # First match inside backticks. If that fails fallback to match until first space.
 # TODO: Does it match every topic?
-match_text_with_backtick = r"`:(h|he|hel|help)(.*?)?`"
-match_text_with_space = r":(h|he|hel|help)\s*([^\s]+)?"
+match_text_with_backtick = r"`:(h|he|hel|help) (.*?)`"
+match_text_with_space = r":(h|he|hel|help) ([^\s]+)"
 
 match_re_space = re.compile(match_text_with_space, re.IGNORECASE)
 match_re_backtick = re.compile(match_text_with_backtick, re.IGNORECASE)
