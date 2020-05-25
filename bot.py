@@ -4,6 +4,7 @@ import praw
 import re
 import requests
 import sqlite3
+from urllib.parse import quote
 
 reddit = praw.Reddit('bot1')
 
@@ -50,7 +51,7 @@ for comment in subreddit.stream.comments(skip_existing=True):
             print("Tag not found")
         else:
             doc = result[0]
-            link = "https://vimhelp.org/{}.txt.html#{}".format(doc,topic)
+            link = "https://vimhelp.org/{}.txt.html#{}".format(quote(doc),quote(topic))
             
             request = requests.head(link)
             if request.ok:
