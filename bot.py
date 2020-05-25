@@ -64,7 +64,6 @@ for comment in subreddit.stream.comments(skip_existing=True):
                 reply = "Help for {}: {} \n\n".format(topic, link)
                 text += reply
                 replied_topics.append(topic)
-                continue
             else:
                 print("Link not found with surrounding single quotes")
 
