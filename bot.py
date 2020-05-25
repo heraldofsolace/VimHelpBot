@@ -5,11 +5,18 @@ import re
 import requests
 import sqlite3
 from urllib.parse import quote
+import os
+
+# Test at r/pythonforengineers
+
+SUBREDDIT = "pythonforengineers" if os.environ.get("BOT_ENV") == "test" else "vim"
+
+print("Monitoring r/" + SUBREDDIT)
 
 reddit = praw.Reddit('bot1')
 
-# Currently point to this subreddit which allows bot testing
-subreddit = reddit.subreddit("pythonforengineers")
+
+subreddit = reddit.subreddit(SUBREDDIT)
 
 conn = sqlite3.connect("tags.db")
 c = conn.cursor()
