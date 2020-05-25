@@ -55,7 +55,7 @@ for comment in subreddit.stream.comments(skip_existing=True):
             
             request = requests.head(link)
             if request.ok:
-                reply = "Help for {}: {} \n\n".format(topic, link)
+                reply = "Help for `{}`: {} \n\n".format(topic, link)
                 text += reply
                 replied_topics.append(topic)
             else:
