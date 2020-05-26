@@ -25,5 +25,5 @@ jobs:
 
     - name: SSH
       run: |-
-          gcloud compute ssh $GCLOUD_USER@$GCE_INSTANCE --command="update_bot"
+          gcloud compute ssh $GCLOUD_USER@$GCE_INSTANCE --zone=$GCE_INSTANCE_ZONE --command="update_bot"
     
