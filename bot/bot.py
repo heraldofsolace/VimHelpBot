@@ -106,7 +106,7 @@ class Bot:
             match = next(iter(possible_matches.keys()))
             doc = match[0]
             topic = match[1]
-            link = "https://vimhelp.org/{}.txt.html#{}".format(
+            link = "https://vimhelp.org/{}.txt.html#{}\n\n".format(
                 quote(doc), quote(topic))
             request = requests.head(link)
 
