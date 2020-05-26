@@ -66,15 +66,13 @@ class Bot:
 
                     # A match that starts after a non alphanumeric character is better
                     # than a match in the middle of a word.
-                    score += 1
+                    score += 0.5
 
             # How much near to the beginning the match is.
             # The smaller the better. But we are ranking based on score.
             # So we need to have a higher score if match is near beginning.
-            position_fraction = match_index / len(tag)
-            position_fraction = 1 - position_fraction
 
-            score += position_fraction
+            score += (1 / match_index) if match_index != 0 else 1
 
             # Extract the matched part
             matched_string = tag[match_index: match_index + len(text)]
