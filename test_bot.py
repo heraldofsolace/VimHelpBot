@@ -24,7 +24,7 @@ class TestBot(unittest.TestCase):
         bot = Bot()
 
         # TODO Add more tests
-        tests = {"num": "+num64", "Num": "Number", "<_": "v_b_<_example", "hl": "'hl'"}
+        tests = {"num": "+num64","NUm": "Number", "Num": "Number", "<_": "v_b_<_example", "hl": "'hl'"}
         for k, v in tests.items():
             result = bot.search_tag(k)
             best_tag = next(iter(result.keys()))[1]

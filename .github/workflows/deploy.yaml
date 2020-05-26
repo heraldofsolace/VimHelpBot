@@ -1,0 +1,29 @@
+name: Build and Deploy to Google Compute Engine
+
+on:
+  push:
+    branches:
+    - master
+
+env:
+  PROJECT_ID: ${{ secrets.GCE_PROJECT }}
+  GCE_INSTANCE: ${{ secrets.GCE_INSTANCE }}
+  GCE_INSTANCE_ZONE: ${{ secrets.GCE_INSTANCE_ZONE }}
+  GCLOUD_USER: ${{ secrets.GCLOUD_USER }}
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ secrets.GCE_SA_KEY }}
+        project_id: ${{ secrets.GCE_PROJECT }}
+
+    - name: SSH
+      run: |-
+          gcloud compute ssh $GCLOUD_USER@$GCE_INSTANCE --command="update_bot"
+    
