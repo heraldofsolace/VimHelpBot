@@ -18,9 +18,6 @@ class Bot:
             "BOT_ENV") == "test" else "vim"
         print("Monitoring r/" + self.SUBREDDIT)
 
-        reddit = praw.Reddit('bot1')
-        self.subreddit = reddit.subreddit(self.SUBREDDIT)
-
         self.conn = sqlite3.connect("tags.db")
         self.cursor = self.conn.cursor()
 
@@ -129,8 +126,10 @@ class Bot:
 
     def start(self):
 
+        reddit = praw.Reddit('bot1')
+        subreddit = reddit.subreddit(self.SUBREDDIT)
         # Track new comments
-        for comment in self.subreddit.stream.comments(skip_existing=True):
+        for comment in subreddit.stream.comments(skip_existing=True):
 
             # Don't reply to own comment, although it is highly unlikely to contain the trigger terms.
             # if comment.author.name == 'vim-help-bot':

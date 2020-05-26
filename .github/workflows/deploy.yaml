@@ -23,10 +23,7 @@ jobs:
         service_account_key: ${{ secrets.GCE_SA_KEY }}
         project_id: ${{ secrets.GCE_PROJECT }}
     
-    - run: mkdir -p ~/.ssh
-    - run: echo "$SSH_KEY" >> ~/.ssh/google_compute_engine
-    - run: chmod 600 ~/.ssh/google_compute_engine
     - name: SSH
       run: |-
-          gcloud compute ssh $GCLOUD_USER@$GCE_INSTANCE --zone=$GCE_INSTANCE_ZONE --command="update_bot"
+          gcloud compute ssh $GCLOUD_USER@$GCE_INSTANCE --zone=$GCE_INSTANCE_ZONE --command="./update_bot"
     
