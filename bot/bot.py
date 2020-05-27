@@ -96,32 +96,17 @@ class Bot:
     def create_link_for_tag(self, tag, possible_matches):
         text = ""
 
-        # Exact match
-        if len(possible_matches) == 1:
-            match = next(iter(possible_matches.keys()))
-            doc = match[0]
-            topic = match[1]
-            link = "https://vimhelp.org/{}.txt.html#{}\n\n".format(
-                quote(doc), quote(topic))
-            request = requests.head(link)
+        # Only care about the best match
 
-            if request.ok:
-                text += "Help for `{}` : {} \n".format(tag, link)
-        else:
+        match = next(iter(possible_matches.keys()))
+        doc = match[0]
+        topic = match[1]
+        link = "https://vimhelp.org/{}.txt.html#{}".format(
+            quote(doc), quote(topic))
+        request = requests.head(link)
 
-            # More than one matches
-            best_match = next(iter(possible_matches.keys()))
-            doc = best_match[0]
-            topic = best_match[1]
-            link = "https://vimhelp.org/{}.txt.html#{}".format(
-                quote(doc), quote(topic))
-            text += "Could not find an exact match for `{}`. Here is the best match: `{}` : {}\n\n".format(
-                tag, topic, link)
-            text += "Here are all the tags that matched: "
-            for doc, topic in possible_matches.keys():
-                text += "`{}`, ".format(topic)
-            text = text[:-2]  # Remove the last comma and space
-            text += "\n\n"
+        if request.ok:
+            text += "* [`{}`]({}) \n".format(topic, link)
         return text
 
     def start(self):
@@ -140,7 +125,7 @@ class Bot:
             if len(matches) == 0:
                 continue
 
-            text = ""
+            text = "Help pages for:\n\n"
             replied_topics = []
             for match in matches:
                 topic = match[1].strip()
@@ -167,8 +152,7 @@ class Bot:
             if len(text) == 0:
                 continue
 
-            text += "\n\n I'm a bot. Check out my pinned post for more information.\n\n"
-            text += "I am constantly improving my search. If the result is wrong, please contact u/i_abh_esc_wq"
+            text += "\n\n---\n\n^(\`:\(h|he|hel|help\) <query>\` |) [^(source)](https://github.com/Herald-Of-Solace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/Herald-Of-Solace/VimHelpBot/issues/new/choose)"
             comment.reply(text)
 
 
