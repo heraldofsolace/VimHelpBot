@@ -2,6 +2,24 @@ VimHelpBot is a cute little bot which lurks on [r/vim](https://reddit.com/r/vim)
 
 ## How it works
 
-It monitors all comments on r/vim and uses two regex to extract the help topic. By default it looks for `:h topic` within backticks and extracts `topic`. If it fails, it looks for `:h` and extracts until the first space after that.
+It monitors all comments on r/vim and uses two regex to extract the help topic. By default it looks for `:(h|he|hel|help) topic` within backticks and extracts `topic`. If it fails, it looks for `:h` and extracts until the first space after that.
 
 It uses a tag database to figure out which helpfile `topic` belongs to and creates a link to vimhelp for that topic.
+
+If an exact match is not found, it tries to follow Vim's algorithm. From `:h E149`:
+
+
+>			If there is no full match for the pattern, or there
+>			are several matches, the "best" match will be used.
+>			A sophisticated algorithm is used to decide which
+>			match is better than another one.  These items are
+>			considered in the computation:
+>			- A match with same case is much better than a match
+>			  with different case.
+>			- A match that starts after a non-alphanumeric
+>			  character is better than a match in the middle of a
+>			  word.
+>			- A match at or near the beginning of the tag is
+>			  better than a match further on.
+>			- The more alphanumeric characters match, the better.
+>			- The shorter the length of the match, the better.
