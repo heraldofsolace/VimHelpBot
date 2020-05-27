@@ -32,11 +32,11 @@ class Bot:
             match_text_with_backtick, re.IGNORECASE)
 
     def search_tag(self, text):
-        text = text.replace("%", "\\%").replace("_", "\\_")
+        text_escaped = text.replace("%", "\\%").replace("_", "\\_")
 
         # Get all possible matches
         possible_matches = self.cursor.execute(
-            """SELECT * FROM tags WHERE tag LIKE (?) ESCAPE '\\'""", ('%'+text+'%', )).fetchall()
+            """SELECT * FROM tags WHERE tag LIKE (?) ESCAPE '\\'""", ('%'+text_escaped+'%', )).fetchall()
 
         # Nothing found
         if len(possible_matches) == 0:
