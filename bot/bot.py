@@ -106,7 +106,7 @@ class Bot:
         request = requests.head(link)
 
         if request.ok:
-            text += "* [`{}`]({}) \n".format(topic, link)
+            text += "* [`{}`]({}) in _{}.txt_\n".format(topic, link, doc)
         return text
 
     def start(self):
