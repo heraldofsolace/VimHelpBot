@@ -152,7 +152,7 @@ class Bot:
             if len(text) == 0:
                 continue
 
-            text += "\n\n---\n\n^(\`:\(h|help\) <query>\` |) [^(source)](https://github.com/Herald-Of-Solace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/Herald-Of-Solace/VimHelpBot/issues/new/choose)"
+            text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(source)](https://github.com/Herald-Of-Solace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/Herald-Of-Solace/VimHelpBot/issues/new/choose)"
             comment.reply(text)
 
 
