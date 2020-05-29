@@ -147,6 +147,7 @@ class Bot:
                     print("Tag not found")
                 else:
                     text += self.create_link_for_tag(topic, result)
+                replied_topics.append(topic)
 
             # Link not found for all the topics
             if len(text) == 0:
