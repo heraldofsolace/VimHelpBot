@@ -148,10 +148,10 @@ class Bot:
                     print("Tag not found")
                 else:
                     text += self.create_link_for_tag(topic, result)
-                replied_topics.append(topic)
+                    replied_topics.append(topic)
 
             # Link not found for all the topics
-            if len(text) == 0:
+            if len(replied_topics) == 0:
                 continue
 
             text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/Herald-Of-Solace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/Herald-Of-Solace/VimHelpBot/issues/new/choose)"
