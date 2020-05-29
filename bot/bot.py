@@ -33,6 +33,7 @@ class Bot:
 
     def search_tag(self, text):
         text_escaped = text.replace("%", "\\%").replace("_", "\\_")
+        text_escaped = text_escaped.replace('"', "quote")
 
         # Get all possible matches
         possible_matches = self.cursor.execute(
