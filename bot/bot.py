@@ -38,6 +38,7 @@ class Bot:
         # Get all possible matches
         possible_matches = self.cursor.execute(
             """SELECT * FROM tags WHERE tag LIKE (?) ESCAPE '\\'""", ('%'+text_escaped+'%', )).fetchall()
+        print(text, "=>",possible_matches)
 
         # Nothing found
         if len(possible_matches) == 0:
@@ -120,42 +121,47 @@ class Bot:
             # Don't reply to own comment, although it is highly unlikely to contain the trigger terms.
             # if comment.author.name == 'vim-help-bot':
             #   continue
-            matches = self.match_re_backtick.findall(comment.body)
-            if len(matches) == 0:
-                matches = self.match_re_space.findall(comment.body)
-            if len(matches) == 0:
-                continue
+            text = self.create_comment(comment.body)
+            if text != '':
+                comment.reply(text)
 
-            text = "Help pages for:\n\n"
-            replied_topics = []
-            for match in matches:
-                topic = match[1].strip()
-                if topic == '':
+    def create_comment(self, comment):
+
+        matches = self.match_re_backtick.findall(comment)
+        if len(matches) == 0:
+            matches = self.match_re_space.findall(comment)
+        if len(matches) == 0:
+            return ''
+        text = "Help pages for:\n\n"
+        replied_topics = []
+        for match in matches:
+            topic = match[1].strip()
+            if topic == '':
                     # Called with no argument
-                    topic = "help.txt"
+                topic = "help.txt"
 
-                # Already replied. Skip
-                if topic in replied_topics:
-                    continue
-
-                # Create the link by by adjoining .txt after the matched part.
-                # TODO: Is this the correct approach?
-
-                # Search in DB
-                result = self.search_tag(topic)
-                print(result)
-                if result is None:
-                    print("Tag not found")
-                else:
-                    text += self.create_link_for_tag(topic, result)
-                    replied_topics.append(topic)
-
-            # Link not found for all the topics
-            if len(replied_topics) == 0:
+            # Already replied. Skip
+            if topic in replied_topics:
                 continue
 
-            text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/Herald-Of-Solace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/Herald-Of-Solace/VimHelpBot/issues/new/choose)"
-            comment.reply(text)
+            # Create the link by by adjoining .txt after the matched part.
+            # TODO: Is this the correct approach?
+
+            # Search in DB
+            result = self.search_tag(topic)
+            print(result)
+            if result is None:
+                print("Tag not found")
+            else:
+                text += self.create_link_for_tag(topic, result)
+                replied_topics.append(topic)
+
+        # Link not found for all the topics
+        if len(replied_topics) == 0:
+            return ''
+
+        text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/Herald-Of-Solace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/Herald-Of-Solace/VimHelpBot/issues/new/choose)"
+        return text
 
 
 if __name__ == "__main__":
