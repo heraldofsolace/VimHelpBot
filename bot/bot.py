@@ -50,7 +50,7 @@ class Bot:
 
         # If there is an exact match, it must be the first one
         # Exact match is the best match
-        if len(possible_matches[0][1]) == len(text):
+        if possible_matches[0][1] == text:
             return {possible_matches[0]: 100}
 
         # Score of all the matches

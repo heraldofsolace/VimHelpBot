@@ -25,18 +25,20 @@ class TestBot(unittest.TestCase):
         bot = Bot()
 
         # TODO Add more tests
-        tests_vim = {"usr_01.txt": "usr_01.txt", "num": "+num64", "NUm": "Number",
+        tests_vim = {"number": ":number", "usr_01.txt": "usr_01.txt", "num": "+num64", "NUm": "Number",
                      "Num": "Number", "<_": "v_b_<_example", "hl": "'hl'", "\".": "quote.", "\"=": "quote=", ":execute": ":execute"}
         for k, v in tests_vim.items():
             result = bot.search_tag(k)
+            print(k, "=>", result)
             best_tag = next(iter(result.keys()))[1]
             self.assertEqual(best_tag, v)
 
-        tests_nvim = {"num": ":number", ":li": ":list",
-                "aba": "abandon", "_<": "v_<"}
+        tests_nvim = {"num": ":number", "number": ":number", ":li": ":list",
+                      "aba": "abandon", "_<": "v_<"}
 
         for k, v in tests_nvim.items():
             result = bot.search_tag(k, "neovim")
+            print(k, "=>", result)
             best_tag = next(iter(result.keys()))[1]
             self.assertEqual(best_tag, v)
 
