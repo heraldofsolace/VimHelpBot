@@ -15,10 +15,10 @@ class Bot:
 
         # Test at r/pythonforengineers
         self.SUBREDDIT = "pythonforengineers" if os.environ.get(
-            "BOT_ENV") == "test" else "vim"
+            "BOT_ENV") == "test" else "vim+neovim"
         print("Monitoring r/" + self.SUBREDDIT)
 
-        self.conn = sqlite3.connect("tags.db")
+        self.conn = sqlite3.connect("tags1.db")
         self.cursor = self.conn.cursor()
 
         # Regex to match
@@ -31,14 +31,17 @@ class Bot:
         self.match_re_backtick = re.compile(
             match_text_with_backtick, re.IGNORECASE)
 
-    def search_tag(self, text):
+    def search_tag(self, text, subreddit="vim"):
+        if subreddit not in ["vim", "neovim"]:
+            subreddit = "vim"
+
         text_escaped = text.replace("%", "\\%").replace("_", "\\_")
         text_escaped = text_escaped.replace('"', "quote")
 
         # Get all possible matches
         possible_matches = self.cursor.execute(
-            """SELECT * FROM tags WHERE tag LIKE (?) ESCAPE '\\'""", ('%'+text_escaped+'%', )).fetchall()
-        print(text, "=>",possible_matches)
+            """SELECT * FROM tags WHERE tag LIKE (?) ESCAPE '\\' AND software=(?)""", ('%'+text_escaped+'%', subreddit)).fetchall()
+        # print(text, "=>", possible_matches)
 
         # Nothing found
         if len(possible_matches) == 0:
@@ -52,7 +55,7 @@ class Bot:
 
         # Score of all the matches
         match_scores = {i: 0 for i in possible_matches}
-        for doc, tag in possible_matches:
+        for doc, tag, software in possible_matches:
             score = 0.0
             match_index = tag.find(text)
             if match_index != -1:  # Same case match is better
@@ -88,14 +91,18 @@ class Bot:
 
             # The shorter the length of the match, the better
             score += (1 / len(tag))
-            match_scores[(doc, tag)] = score
+            match_scores[(doc, tag, software)] = score
 
         # Sort by descending score
         match_scores = {k: v for k, v in sorted(
             match_scores.items(), key=lambda item: item[1], reverse=True)}
+        print(text, " => ", match_scores)
         return match_scores
 
-    def create_link_for_tag(self, tag, possible_matches):
+    def create_link_for_tag(self, tag, possible_matches, subreddit="vim"):
+        if subreddit not in ["vim", "neovim"]:
+            subreddit = "vim"
+
         text = ""
 
         # Only care about the best match
@@ -103,8 +110,14 @@ class Bot:
         match = next(iter(possible_matches.keys()))
         doc = match[0]
         topic = match[1]
-        link = "https://vimhelp.org/{}.txt.html#{}".format(
-            quote(doc), quote(topic))
+
+        link = ""
+        if subreddit == "vim":
+            link = "https://vimhelp.org/{}.txt.html#{}".format(
+                quote(doc), quote(topic))
+        else:
+            link = "https://neovim.io/doc/user/{}.html#{}".format(
+                quote(doc), quote(topic))
         request = requests.head(link)
 
         if request.ok:
@@ -119,13 +132,16 @@ class Bot:
         for comment in subreddit.stream.comments(skip_existing=True):
 
             # Don't reply to own comment, although it is highly unlikely to contain the trigger terms.
-            # if comment.author.name == 'vim-help-bot':
-            #   continue
-            text = self.create_comment(comment.body)
+            #if comment.author.name == 'vim-help-bot':
+            #    continue
+            text = self.create_comment(comment.body, comment.subreddit.display_name)
             if text != '':
                 comment.reply(text)
 
-    def create_comment(self, comment):
+    def create_comment(self, comment, subreddit="vim"):
+        print("Comment in ", subreddit)
+        if subreddit not in ["vim", "neovim"]:
+            subreddit = "vim"
 
         matches = self.match_re_backtick.findall(comment)
         if len(matches) == 0:
@@ -148,12 +164,12 @@ class Bot:
             # TODO: Is this the correct approach?
 
             # Search in DB
-            result = self.search_tag(topic)
+            result = self.search_tag(topic, subreddit)
             print(result)
             if result is None:
                 print("Tag not found")
             else:
-                text += self.create_link_for_tag(topic, result)
+                text += self.create_link_for_tag(topic, result, subreddit)
                 replied_topics.append(topic)
 
         # Link not found for all the topics
