@@ -11,7 +11,7 @@ class TestBot(unittest.TestCase):
         bot = Bot()
 
         # TODO Add more tests
-        tests = ["options", "E149", ":number", ":nu", "gj"]
+        tests = ["options", "E149", ":number", ":nu", "gj", "quickfix"]
         for t in tests:
             for subreddit in ["vim", "neovim"]:
                 result = bot.search_tag(t, subreddit)
@@ -49,10 +49,10 @@ class TestBot(unittest.TestCase):
         bot = Bot()
         comment = "Test comment `:h nothingtoseehere`"
 
-        reply = bot.create_comment(comment, "vim")
+        reply = bot.create_comment(comment, "link", "vim")
         self.assertEqual(reply, '')
 
-        reply = bot.create_comment(comment, "neovim")
+        reply = bot.create_comment(comment, "link", "neovim")
         self.assertEqual(reply, '')
 
     def test_normal_comment(self):

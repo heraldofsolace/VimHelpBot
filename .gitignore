@@ -1,3 +1,4 @@
 praw.ini
+.env
 __pycache__/*
 bot/__pycache__/*

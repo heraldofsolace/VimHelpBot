@@ -13,9 +13,9 @@ class Bot:
     def __init__(self):
         super().__init__()
 
+        self.env = os.environ.get("BOT_ENV")
         # Test at r/pythonforengineers
-        self.SUBREDDIT = "pythonforengineers" if os.environ.get(
-            "BOT_ENV") == "test" else "vim+neovim"
+        self.SUBREDDIT = "pythonforengineers" if self.env == "test" else "vim+neovim"
         print("Monitoring r/" + self.SUBREDDIT)
 
         self.conn = sqlite3.connect("tags1.db")
@@ -30,6 +30,22 @@ class Bot:
         self.match_re_space = re.compile(match_text_with_space, re.IGNORECASE)
         self.match_re_backtick = re.compile(
             match_text_with_backtick, re.IGNORECASE)
+
+    def create_github_issue(self, tag, link):
+        token = os.environ.get("GITHUB_TOKEN")
+        issue = {
+            "title": "Tag `{}` not found".format(tag),
+            "body": "Tag `{}` not found as seen [here]({})".format(tag, link),
+            "assignees": ["Herald-Of-Solace"],
+            "labels": ["bug"]
+        }
+        print(issue)
+        if self.env == "test":
+            print("Testing. Not making an issue")
+        else:
+            response = requests.post("https://api.github.com/repos/Herald-Of-Solace/VimHelpBot/issues",
+                      json=issue, headers={"Authorization": "token {}".format(token)})
+            print(response.json())
 
     def search_tag(self, text, subreddit="vim"):
         if subreddit not in ["vim", "neovim"]:
@@ -132,13 +148,14 @@ class Bot:
         for comment in subreddit.stream.comments(skip_existing=True):
 
             # Don't reply to own comment, although it is highly unlikely to contain the trigger terms.
-            #if comment.author.name == 'vim-help-bot':
+            # if comment.author.name == 'vim-help-bot':
             #    continue
-            text = self.create_comment(comment.body, comment.subreddit.display_name)
+            text = self.create_comment(
+                comment.body, comment.permalink, comment.subreddit.display_name)
             if text != '':
                 comment.reply(text)
 
-    def create_comment(self, comment, subreddit="vim"):
+    def create_comment(self, comment, link, subreddit="vim"):
         print("Comment in ", subreddit)
         if subreddit not in ["vim", "neovim"]:
             subreddit = "vim"
@@ -168,6 +185,7 @@ class Bot:
             print(result)
             if result is None:
                 print("Tag not found")
+                self.create_github_issue(topic, link)
             else:
                 text += self.create_link_for_tag(topic, result, subreddit)
                 replied_topics.append(topic)
