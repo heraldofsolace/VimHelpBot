@@ -35,7 +35,7 @@ class Bot:
         token = os.environ.get("GITHUB_TOKEN")
         issue = {
             "title": "Tag `{}` not found".format(tag),
-            "body": "Tag `{}` not found as seen [here]({})".format(tag, link),
+            "body": "Tag `{}` not found as seen [here](https://reddit.com/{})".format(tag, link),
             "assignees": ["Herald-Of-Solace"],
             "labels": ["bug"]
         }
