@@ -51,12 +51,11 @@ class Bot:
         if subreddit not in ["vim", "neovim"]:
             subreddit = "vim"
 
-        text_escaped = text.replace("%", "\\%").replace("_", "\\_")
-        text_escaped = text_escaped.replace('"', "quote")
+        text_escaped = text.replace('"', "quote")
 
         # Get all possible matches
         possible_matches = self.cursor.execute(
-            """SELECT * FROM tags WHERE tag LIKE (?) ESCAPE '\\' AND software=(?)""", ('%'+text_escaped+'%', subreddit)).fetchall()
+            """SELECT * FROM tags WHERE tag LIKE (?) AND software=(?)""", ('%'+text_escaped+'%', subreddit)).fetchall()
         # print(text, "=>", possible_matches)
 
         # Nothing found
