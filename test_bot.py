@@ -28,7 +28,7 @@ class TestBot(unittest.TestCase):
         tests_vim = {"number": ":number", "usr_01.txt": "usr_01.txt",
                      "num": "+num64", "NUm": "Number", "Num": "Number",
                      "<_": "v_b_<_example", "hl": "'hl'", "\".": "quote.",
-                     "\"=": "quote=", ":execute": ":execute", "/\<": "/\<"}
+                     "\"=": "quote=", ":execute": ":execute", "/\<": "/\<", "%:.": "%:.", "_%": ":_%"}
         for k, v in tests_vim.items():
             result = bot.search_tag(k)
             print(k, "=>", result)

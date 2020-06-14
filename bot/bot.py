@@ -56,7 +56,7 @@ class Bot:
         # Get all possible matches
         possible_matches = self.cursor.execute(
             """SELECT * FROM tags WHERE tag LIKE (?) AND software=(?)""", ('%'+text_escaped+'%', subreddit)).fetchall()
-        # print(text, "=>", possible_matches)
+        print(text, "=>", possible_matches)
 
         # Nothing found
         if len(possible_matches) == 0:
