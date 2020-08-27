@@ -44,7 +44,7 @@ class Bot:
         if self.env == "test":
             print("Testing. Not making an issue")
         else:
-            response = requests.post("https://api.github.com/repos/Herald-Of-Solace/VimHelpBot/issues",
+            response = requests.post("https://api.github.com/repos/heraldofsolace/VimHelpBot/issues",
                       json=issue, headers={"Authorization": "token {}".format(token)})
             print(response.json())
 
@@ -218,7 +218,7 @@ class Bot:
         if len(replied_topics) == 0:
             return ''
 
-        text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/Herald-Of-Solace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/Herald-Of-Solace/VimHelpBot/issues/new/choose)"
+        text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/heraldofsolace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/heraldofsolace/VimHelpBot/issues/new/choose)"
         text += " ^(|) ^(Reply 'rescan' to check the comment again)"
         return text
 
