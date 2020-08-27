@@ -24,4 +24,5 @@ If applicable, add screenshots to help explain your problem.
 **Additional context**
 Add any other context about the problem here.
 
-[ ] Willing to take up?
+<!-- Are you willing to fix this bug yourself? If not, remove the 'x' -->
+- [x] Willing to take up?
