@@ -21,6 +21,7 @@ class Bot:
         self.conn = sqlite3.connect("tags1.db")
         self.cursor = self.conn.cursor()
 
+
         # Regex to match
         # First match inside backticks. If that fails fallback to match until first space.
         # TODO: Does it match every topic?
@@ -51,7 +52,7 @@ class Bot:
         if subreddit not in ["vim", "neovim"]:
             subreddit = "vim"
 
-        text_escaped = text.replace("%", "\\%").replace("_", "\\_")
+        text_escaped = text.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
         text_escaped = text_escaped.replace('"', "quote")
 
         # Get all possible matches
@@ -89,8 +90,8 @@ class Bot:
             # How much near to the beginning the match is.
             # The smaller the better. But we are ranking based on score.
             # So we need to have a higher score if match is near beginning.
-
-            score += (1 / match_index) if match_index != 0 else 1
+            match_index_percentage = match_index #/ len(tag)
+            score += (1 / match_index_percentage) if match_index_percentage != 0 else 1
 
             # Extract the matched part
             matched_string = tag[match_index: match_index + len(text)]
@@ -144,16 +145,39 @@ class Bot:
 
         reddit = praw.Reddit('bot1')
         subreddit = reddit.subreddit(self.SUBREDDIT)
-        # Track new comments
-        for comment in subreddit.stream.comments(skip_existing=True):
+        comment_stream = subreddit.stream.comments(skip_existing=True, pause_after=-1)
+        inbox_stream = praw.models.util.stream_generator(reddit.inbox.comment_replies, pause_after=-1, skip_existing=True) 
 
-            # Don't reply to own comment, although it is highly unlikely to contain the trigger terms.
-            # if comment.author.name == 'vim-help-bot':
-            #    continue
-            text = self.create_comment(
-                comment.body, comment.permalink, comment.subreddit.display_name)
-            if text != '':
-                comment.reply(text)
+        while True:
+            # Track new comments
+            for comment in comment_stream:
+                if comment is None:
+                    break
+                # Don't reply to own comment, although it is highly unlikely to contain the trigger terms.
+                if comment.author.name == 'vim-help-bot':
+                   continue
+                text = self.create_comment(
+                    comment.body, comment.permalink, comment.subreddit.display_name)
+                if text != '':
+                    comment.reply(text)
+            
+            # Track replies
+            for reply in inbox_stream:
+                if reply is None:
+                    break
+                comment = reply.parent()
+
+                # Is it possible to get inbox message for a comment that is not a reply to own comment?
+                if comment.author == 'vim-help-bot':
+
+                    # Rescan
+                    if reply.body == 'rescan':
+                        print(comment)
+                        parent = comment.parent()
+                        text = self.create_comment(
+                            parent.body, parent.permalink, parent.subreddit.display_name)
+                        if text != '':
+                            comment.edit(text)
 
     def create_comment(self, comment, link, subreddit="vim"):
         print("Comment in ", subreddit)
@@ -195,6 +219,7 @@ class Bot:
             return ''
 
         text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/Herald-Of-Solace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/Herald-Of-Solace/VimHelpBot/issues/new/choose)"
+        text += " ^(|) ^(Reply 'rescan' to check the comment again)"
         return text
 
 

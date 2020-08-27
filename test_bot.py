@@ -11,7 +11,7 @@ class TestBot(unittest.TestCase):
         bot = Bot()
 
         # TODO Add more tests
-        tests = ["options", "E149", ":number", ":nu", "gj", "quickfix"]
+        tests = ["options", "E149", ":number", ":nu", "gj", "quickfix", "%:."]
         for t in tests:
             for subreddit in ["vim", "neovim"]:
                 result = bot.search_tag(t, subreddit)
@@ -26,7 +26,7 @@ class TestBot(unittest.TestCase):
 
         # TODO Add more tests
         tests_vim = {"number": ":number", "usr_01.txt": "usr_01.txt", "num": "+num64", "NUm": "Number",
-                     "Num": "Number", "<_": "v_b_<_example", "hl": "'hl'", "\".": "quote.", "\"=": "quote=", ":execute": ":execute"}
+                "Num": "Number", "<_": "v_b_<_example", "hl": "'hl'", "\".": "quote.", "\"=": "quote=", ":execute": ":execute", "%": "%", "/\\<": "/\\<"}
         for k, v in tests_vim.items():
             result = bot.search_tag(k)
             print(k, "=>", result)
