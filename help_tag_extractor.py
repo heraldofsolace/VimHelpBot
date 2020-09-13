@@ -14,7 +14,7 @@ def add_tag(doc, software):
             c.execute("INSERT OR REPLACE INTO tags VALUES (?,?,?)", t)
             print("{}/{} => {}".format(software,doc, m))
 
-conn = sqlite3.connect('tags.db')
+conn = sqlite3.connect('../tags.db')
 c = conn.cursor()
 c.execute("CREATE TABLE IF NOT EXISTS tags(filename text, tag text, software text)")
 files = glob.glob("../vim/runtime/doc/*.txt")
