@@ -18,7 +18,7 @@ class Bot:
         self.SUBREDDIT = "pythonforengineers" if self.env == "test" else "vim+neovim"
         print("Monitoring r/" + self.SUBREDDIT)
 
-        self.conn = sqlite3.connect("../tags.db")
+        self.conn = sqlite3.connect("tags.db")
         self.cursor = self.conn.cursor()
         
         self.user_conn = sqlite3.connect("../users.db")
