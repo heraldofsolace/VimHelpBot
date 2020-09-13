@@ -18,9 +18,11 @@ class Bot:
         self.SUBREDDIT = "pythonforengineers" if self.env == "test" else "vim+neovim"
         print("Monitoring r/" + self.SUBREDDIT)
 
-        self.conn = sqlite3.connect("tags1.db")
+        self.conn = sqlite3.connect("tags.db")
         self.cursor = self.conn.cursor()
-
+        
+        self.user_conn = sqlite3.connect("users.db")
+        self.user_cursor = self.user_conn.cursor()
 
         # Regex to match
         # First match inside backticks. If that fails fallback to match until first space.
@@ -153,9 +155,15 @@ class Bot:
             for comment in comment_stream:
                 if comment is None:
                     break
+                
+                username = comment.author.name
                 # Don't reply to own comment, although it is highly unlikely to contain the trigger terms.
-                if comment.author.name == 'vim-help-bot':
+                if username == 'vim-help-bot':
                    continue
+                user_preference = self.user_cursor.execute(
+                    """SELECT * FROM users WHERE username = (?)""", (username, )).fetchone()
+                if user_preference and user_preference[1] == 1:
+                    continue
                 text = self.create_comment(
                     comment.body, comment.permalink, comment.subreddit.display_name)
                 if text != '':
@@ -178,7 +186,17 @@ class Bot:
                             parent.body, parent.permalink, parent.subreddit.display_name)
                         if text != '':
                             comment.edit(text)
-
+                    # stop ;-;
+                    if reply.body == 'stop':
+                        username = reply.author.name
+                        
+                        self.user_cursor.execute("INSERT INTO users VALUES(?, ?)", (username, 1))
+                        comment = "I will not reply to your comments anymore!!"
+                        comment += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/heraldofsolace/VimHelpBot)"
+                        self.user_conn.commit()
+                        reply.reply(comment)
+                        
+                
     def create_comment(self, comment, link, subreddit="vim"):
         print("Comment in ", subreddit)
         if subreddit not in ["vim", "neovim"]:
@@ -219,7 +237,8 @@ class Bot:
             return ''
 
         text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/heraldofsolace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/heraldofsolace/VimHelpBot/issues/new/choose)"
-        text += " ^(|) ^(Reply 'rescan' to check the comment again)"
+        text += " ^(|) ^Reply&nbsp;'rescan'&nbsp;to&nbsp;check&nbsp;the&nbsp;comment&nbsp;again"
+        text += " ^(|) ^Reply&nbsp;'stop'&nbsp;to&nbsp;stop&nbsp;getting&nbsp;replies&nbsp;to&nbsp;your&nbsp;comments"
         return text
 
 

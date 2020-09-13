@@ -11,16 +11,17 @@ def add_tag(doc, software):
         for m in matches:
             doc = doc.split("/")[-1].split(".")[0]
             t = (doc, m, software)
-            c.execute("INSERT INTO tags VALUES (?,?,?)", t)
+            c.execute("INSERT OR REPLACE INTO tags VALUES (?,?,?)", t)
             print("{}/{} => {}".format(software,doc, m))
 
-conn = sqlite3.connect('tags1.db')
+conn = sqlite3.connect('tags.db')
 c = conn.cursor()
-files = glob.glob("/home/aniket/vim/runtime/doc/*.txt")
+c.execute("CREATE TABLE IF NOT EXISTS tags(filename text, tag text, software text)")
+files = glob.glob("../vim/runtime/doc/*.txt")
 for doc in files:
     add_tag(doc, "vim")
 
-files = glob.glob("/home/aniket/neovim/runtime/doc/*.txt")
+files = glob.glob("../neovim/runtime/doc/*.txt")
 for doc in files:
     add_tag(doc, "neovim")
 conn.commit()
