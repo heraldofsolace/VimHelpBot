@@ -1,28 +1,30 @@
 import re
-import glob
 import sqlite3
+import subprocess
 
-def add_tag(doc, software):
-    with open(doc) as f:
-        text = f.read()
-        
-        match_re = re.compile(r'(?:^|\s)\*(\S*?)\*(?=\s)')
-        matches = match_re.findall(text)
-        for m in matches:
-            doc = doc.split("/")[-1].split(".")[0]
-            t = (doc, m, software)
-            c.execute("INSERT OR REPLACE INTO tags VALUES (?,?,?)", t)
-            print("{}/{} => {}".format(software,doc, m))
+tag_re = re.compile(r'^(\S+)\s*(\S+).txt', re.MULTILINE)
+def add_tags(software):
+        with open('~/' + software + '/runtime/doc/tags') as f:
+                text = f.read()
 
-conn = sqlite3.connect('../tags.db')
+                matches = tag_re.findall(text)
+
+                for m in matches:
+                    # db entry: (doc, tag, software)
+                    entry = (m[1], m[0], software)
+
+                    c.execute('INSERT OR REPLACE INTO tags VALUES (?,?,?)', entry)
+                    print('{}/{} => {}'.format(software, m[1], m[0]))
+
+conn = sqlite3.connect('tags.db')
 c = conn.cursor()
 c.execute("CREATE TABLE IF NOT EXISTS tags(filename text, tag text, software text)")
-files = glob.glob("../vim/runtime/doc/*.txt")
-for doc in files:
-    add_tag(doc, "vim")
 
-files = glob.glob("../neovim/runtime/doc/*.txt")
-for doc in files:
-    add_tag(doc, "neovim")
+# list of supported softwares
+softwares = ['vim', 'neovim']
+
+for software in softwares:
+        add_tags(software)
+
 conn.commit()
 conn.close()
