@@ -8,8 +8,7 @@
 git -C third_party/vim pull
 git -C third_party/neovim pull
 
-# build helptags for (Neo)Vim
-vim --clean -e --cmd 'helptags third_party/vim/runtime/doc | quit'
+# build helptags for Neovim (Vim repo comes with 'tags' file)
 vim --clean -e --cmd 'helptags third_party/neovim/runtime/doc | quit'
 
 python help_tag_extractor.py
