@@ -1,6 +1,5 @@
 import re
 import sqlite3
-import subprocess
 
 tag_re = re.compile(r'^(\S+)\s*(\S+).txt', re.MULTILINE)
 def add_tags(software):
