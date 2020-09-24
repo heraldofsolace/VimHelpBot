@@ -4,7 +4,7 @@ import subprocess
 
 tag_re = re.compile(r'^(\S+)\s*(\S+).txt', re.MULTILINE)
 def add_tags(software):
-        with open('~/' + software + '/runtime/doc/tags') as f:
+        with open('third_party/' + software + '/runtime/doc/tags') as f:
                 text = f.read()
 
                 matches = tag_re.findall(text)
