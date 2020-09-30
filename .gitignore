@@ -3,3 +3,4 @@ praw.ini
 __pycache__/*
 bot/__pycache__/*
 .vscode
+third_party/
