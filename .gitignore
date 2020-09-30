@@ -4,3 +4,4 @@ __pycache__/*
 bot/__pycache__/*
 .vscode
 third_party/
+data/

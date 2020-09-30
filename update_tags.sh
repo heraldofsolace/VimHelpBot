@@ -20,4 +20,7 @@ if [ "$nvim_status" != "Already up to date." ]; then
     vim --clean -e --cmd 'helptags third_party/neovim/runtime/doc | quit'
 fi
 
+# Directory for storing data
+mkdir -p data
+
 python help_tag_extractor.py

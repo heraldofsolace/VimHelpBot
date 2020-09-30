@@ -15,6 +15,7 @@ class TestBot(unittest.TestCase):
         for t in tests:
             for subreddit in ["vim", "neovim"]:
                 result = bot.search_tag(t, subreddit)
+                print(result)
                 self.assertEqual(len(result), 1)
 
     def test_non_exact_matches(self):
@@ -62,7 +63,7 @@ class TestBot(unittest.TestCase):
 
         bot = Bot()
         tags = [":tab", ":options", ":tjump", "c_CTRL-R_CTRL-W",
-                ":execute", "expand()", "<cword>"]
+                ":execute", "expand()"]
 
         text = "Test comment: " + \
             ','.join(list(map(lambda t: "`:h {}`".format(t), tags)))

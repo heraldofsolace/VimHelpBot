@@ -18,12 +18,16 @@ class Bot:
         self.SUBREDDIT = "pythonforengineers" if self.env == "test" else "vim+neovim"
         print("Monitoring r/" + self.SUBREDDIT)
 
-        self.conn = sqlite3.connect("tags.db") if self.env == "test" else sqlite3.connect("../tags.db")
+        self.conn = sqlite3.connect("tags.db") if self.env == "test" else sqlite3.connect("data/tags.db")
         self.cursor = self.conn.cursor()
         
-        self.user_conn = sqlite3.connect("users.db") if self.env == "test" else sqlite3.connect("../users.db")
+        self.user_conn = sqlite3.connect("users.db") if self.env == "test" else sqlite3.connect("data/users.db")
         self.user_cursor = self.user_conn.cursor()
-
+        self.user_cursor.execute("""CREATE TABLE IF NOT EXISTS "users" (
+	        "username"	TEXT,
+	        "stopped"	INTEGER DEFAULT 0,
+	        PRIMARY KEY("username")
+            )""")
         # Regex to match
         # First match inside backticks. If that fails fallback to match until first space.
         # TODO: Does it match every topic?
@@ -66,11 +70,14 @@ class Bot:
         if len(possible_matches) == 0:
             return None
         possible_matches.sort(key=lambda t: len(t[1]))  # Sort by length
-
-        # If there is an exact match, it must be the first one
-        # Exact match is the best match
-        if possible_matches[0][1] == text:
-            return {possible_matches[0]: 100}
+        
+        # If there is an exact match, it might not be the first one due to case
+        # We keep checking as long as the lengths match
+        for match in possible_matches:
+            if len(match[1]) != len(text):
+                break
+            if match[1] == text:
+                return {possible_matches[0]: 100}
 
         # Score of all the matches
         match_scores = {i: 0 for i in possible_matches}

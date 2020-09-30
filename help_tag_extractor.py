@@ -15,7 +15,7 @@ def add_tags(software):
                     c.execute('INSERT OR REPLACE INTO tags VALUES (?,?,?)', entry)
                     print('{}/{} => {}'.format(software, m[1], m[0]))
 
-conn = sqlite3.connect('tags.db')
+conn = sqlite3.connect('data/tags.db')
 c = conn.cursor()
 c.execute("CREATE TABLE IF NOT EXISTS tags(filename text, tag text, software text)")
 
