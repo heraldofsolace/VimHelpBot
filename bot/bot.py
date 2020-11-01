@@ -28,6 +28,7 @@ class Bot:
 	        "stopped"	INTEGER DEFAULT 0,
 	        PRIMARY KEY("username")
             )""")
+        self.user_conn.commit()
         # Regex to match
         # First match inside backticks. If that fails fallback to match until first space.
         # TODO: Does it match every topic?
@@ -140,10 +141,10 @@ class Bot:
         link = ""
         if subreddit == "vim":
             link = "https://vimhelp.org/{}.txt.html#{}".format(
-                quote(doc), quote(topic))
+                quote(doc), quote(topic, safe=''))
         else:
             link = "https://neovim.io/doc/user/{}.html#{}".format(
-                quote(doc), quote(topic))
+                quote(doc), quote(topic, safe=''))
         request = requests.head(link)
 
         if request.ok:

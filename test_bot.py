@@ -77,6 +77,14 @@ class TestBot(unittest.TestCase):
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply)
+    def test_url_encoding(self):
+        """
+        Test that bot url encodes /
+        """
+
+        bot = Bot()
+        reply = bot.create_comment("`:h s/\\0`", "vim")
+        self.assertIn("https://vimhelp.org/change.txt.html#s%2F%5C0", reply)
 
 
 if __name__ == "__main__":
