@@ -11,12 +11,13 @@ class TestBot(unittest.TestCase):
         bot = Bot()
 
         # TODO Add more tests
-        tests = ["options", "E149", ":number", ":nu", "gj", "quickfix", "%:."]
+        tests = ["options", "E149", ":number", ":nu", "gj", "quickfix", "%:.", "o_v", "gh"]
         for t in tests:
             for subreddit in ["vim", "neovim"]:
                 result = bot.search_tag(t, subreddit)
                 print(result)
                 self.assertEqual(len(result), 1)
+                self.assertEqual(list(result.keys())[0][1], t)
 
     def test_non_exact_matches(self):
         """

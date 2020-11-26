@@ -78,7 +78,7 @@ class Bot:
             if len(match[1]) != len(text):
                 break
             if match[1] == text:
-                return {possible_matches[0]: 100}
+                return {match: 100}
 
         # Score of all the matches
         match_scores = {i: 0 for i in possible_matches}
