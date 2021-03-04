@@ -244,7 +244,7 @@ class Bot:
         if len(replied_topics) == 0:
             return ''
 
-        text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/heraldofsolace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/heraldofsolace/VimHelpBot/issues/new/choose) ^(|) [^donate](https://liberapay.com/heraldofsolace/donate)"
+        text += "\n\n---\n\n^\`:\(h|help\)&nbsp;<query>\`&nbsp;| [^(about)](https://github.com/heraldofsolace/VimHelpBot) ^(|) [^(mistake?)](https://github.com/heraldofsolace/VimHelpBot/issues/new/choose) ^(|) [^(donate)](https://liberapay.com/heraldofsolace/donate)"
         text += " ^(|) ^Reply&nbsp;'rescan'&nbsp;to&nbsp;check&nbsp;the&nbsp;comment&nbsp;again"
         text += " ^(|) ^Reply&nbsp;'stop'&nbsp;to&nbsp;stop&nbsp;getting&nbsp;replies&nbsp;to&nbsp;your&nbsp;comments"
         return text
