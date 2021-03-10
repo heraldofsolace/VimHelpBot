@@ -31,3 +31,5 @@ If no tag is found for a topic, it automatically creates a github issue.
 If my program helped you, please consider donating - 
 
 <a href="https://liberapay.com/heraldofsolace/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J3J53WCCI)
