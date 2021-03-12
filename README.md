@@ -1,3 +1,5 @@
+[![Build and Deploy to Google Compute Engine](https://github.com/heraldofsolace/VimHelpBot/actions/workflows/deploy.yaml/badge.svg)](https://github.com/heraldofsolace/VimHelpBot/actions/workflows/deploy.yaml)
+
 VimHelpBot is a cute little bot which lurks on [r/vim](https://reddit.com/r/vim) and [r/neovim](https://reddit.com/r/neovim) as [u/vim-help-bot](https://www.reddit.com/user/vim-help-bot). It looks for comments containing ":h help-topic" and replies with a link to [Vim Help](https://vimhelp.org/).
 
 ## How it works
