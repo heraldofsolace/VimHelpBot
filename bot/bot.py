@@ -211,8 +211,7 @@ class Bot:
             subreddit = "vim"
 
         matches = self.match_re_backtick.findall(comment)
-        if len(matches) == 0:
-            matches = self.match_re_space.findall(comment)
+        matches = matches + self.match_re_space.findall(comment)
         if len(matches) == 0:
             return ''
         text = "Help pages for:\n\n"
