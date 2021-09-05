@@ -57,9 +57,9 @@ class TestBot(unittest.TestCase):
         reply = bot.create_comment(comment, "link", "neovim")
         self.assertEqual(reply, '')
 
-    def test_normal_comment(self):
+    def test_backtick_comment(self):
         """
-        Test that bot can find everything
+        Test that bot can find all backtick-style queries
         """
 
         bot = Bot()
@@ -78,6 +78,54 @@ class TestBot(unittest.TestCase):
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply)
+
+    def test_space_comment(self):
+        """
+        Test that bot can find all space-style queries
+        """
+
+        bot = Bot()
+        tags = [":tab", ":options", ":tjump", "c_CTRL-R_CTRL-W",
+                ":execute", "expand()"]
+
+        text = "Test comment: " + \
+            ' '.join(list(map(lambda t: ":h {}".format(t), tags)))
+
+        reply = bot.create_comment(text, "vim")
+        self.assertNotEqual(reply, '')
+        for tag in tags:
+            self.assertIn(tag, reply)
+
+        reply = bot.create_comment(text, "neovim")
+        self.assertNotEqual(reply, '')
+        for tag in tags:
+            self.assertIn(tag, reply)
+
+
+    def test_mixed_style_comment(self):
+        """
+        Test that bot can find all backtick-
+        and space- style queries when mixed
+        """
+
+        bot = Bot()
+        backtick_tags = [":,", "'formatlistpat'", "augroup"]
+        space_tags = ["l:var", "substitute()", "'updatetime'"]
+        text = "Test comment: " + \
+            ','.join(list(map(lambda t: "`:h {}`".format(t), backtick_tags))) + \
+            '\n' + \
+            ' '.join(list(map(lambda t: ":h {}".format(t), space_tags)))
+
+        reply = bot.create_comment(text, "vim")
+        self.assertNotEqual(reply, '')
+        for tag in backtick_tags + space_tags:
+            self.assertIn(tag, reply)
+
+        reply = bot.create_comment(text, "neovim")
+        self.assertNotEqual(reply, '')
+        for tag in backtick_tags + space_tags:
+            self.assertIn(tag, reply);
+
     def test_url_encoding(self):
         """
         Test that bot url encodes /
