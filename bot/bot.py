@@ -33,7 +33,7 @@ class Bot:
         # First match inside backticks. If that fails fallback to match until first space.
         # TODO: Does it match every topic?
         match_text_with_backtick = r"`:(h|he|hel|help) (.*?)`"
-        match_text_with_space = r":(h|he|hel|help) ([^\s]+)"
+        match_text_with_space = r":(h|he|hel|help) ([^\s]+)[,.;:]?"
 
         self.match_re_space = re.compile(match_text_with_space, re.IGNORECASE)
         self.match_re_backtick = re.compile(
@@ -226,13 +226,17 @@ class Bot:
             if topic in replied_topics:
                 continue
 
-            # Create the link by by adjoining .txt after the matched part.
-            # TODO: Is this the correct approach?
-
             # Search in DB
             result = self.search_tag(topic, subreddit)
-            print(result)
             if result is None:
+                # If end is one of [,.;:], try again
+                # after stripping trailing punctuation
+                if topic[-1] in [',', '.', ';', ':']:
+                    topic = topic[0:-1]
+                    result = self.search_tag(topic, subreddit)
+
+            if result is None:
+                # still no matches
                 print("Tag not found")
                 self.create_github_issue(topic, link)
             else:
