@@ -126,6 +126,34 @@ class TestBot(unittest.TestCase):
         for tag in backtick_tags + space_tags:
             self.assertIn(tag, reply);
 
+    def test_punctuation_retry(self):
+        """
+        Test that bot finds tags that don't
+        match because of punctuation, but would
+        match otherwise.
+
+        e.g. In the string, "You should look at :h help."
+        """
+
+        bot = Bot()
+        tags = ["'formatlistpat'", "g:var", "c_CTRL-SHIFT-V",
+                ":lhelpgrep", ":viusage", "quote.", "+extra",
+                ":import-cycle"]
+        punct = [',', '.', ';', ':']*2
+        text = "Test comment: "
+        for tag, punct in zip(tags, punct):
+            text = text + " :h " + tag + punct
+
+        reply = bot.create_comment(text, "vim")
+        self.assertNotEqual(reply, '')
+        for tag in tags:
+            self.assertIn(tag, reply)
+
+        reply = bot.create_comment(text, "neovim")
+        self.assertNotEqual(reply, '')
+        for tag in tags:
+            self.assertIn(tag, reply);
+
     def test_url_encoding(self):
         """
         Test that bot url encodes /
