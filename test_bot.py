@@ -136,9 +136,8 @@ class TestBot(unittest.TestCase):
         """
 
         bot = Bot()
-        tags = ["'formatlistpat'", "g:var", "c_CTRL-SHIFT-V",
-                ":lhelpgrep", ":viusage", "quote.", "+extra",
-                ":import-cycle"]
+        tags = ["'formatlistpat'", "g:var",
+                ":lhelpgrep", ":viusage", "quote."]
         punct = [',', '.', ';', ':']*2
         text = "Test comment: "
         for tag, punct in zip(tags, punct):
