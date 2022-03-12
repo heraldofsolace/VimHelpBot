@@ -51,10 +51,10 @@ class TestBot(unittest.TestCase):
         bot = Bot()
         comment = "Test comment `:h nothingtoseehere`"
 
-        reply = bot.create_comment(comment, "link", "vim")
+        reply = bot.create_comment(comment, None, "vim")
         self.assertEqual(reply, '')
 
-        reply = bot.create_comment(comment, "link", "neovim")
+        reply = bot.create_comment(comment, None, "neovim")
         self.assertEqual(reply, '')
 
     def test_backtick_comment(self):
@@ -69,12 +69,12 @@ class TestBot(unittest.TestCase):
         text = "Test comment: " + \
             ','.join(list(map(lambda t: "`:h {}`".format(t), tags)))
 
-        reply = bot.create_comment(text, "vim")
+        reply = bot.create_comment(text, None, "vim")
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply)
 
-        reply = bot.create_comment(text, "neovim")
+        reply = bot.create_comment(text, None, "neovim")
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply)
@@ -91,12 +91,12 @@ class TestBot(unittest.TestCase):
         text = "Test comment: " + \
             ' '.join(list(map(lambda t: ":h {}".format(t), tags)))
 
-        reply = bot.create_comment(text, "vim")
+        reply = bot.create_comment(text, None, "vim")
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply)
 
-        reply = bot.create_comment(text, "neovim")
+        reply = bot.create_comment(text, None, "neovim")
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply)
@@ -116,12 +116,12 @@ class TestBot(unittest.TestCase):
             '\n' + \
             ' '.join(list(map(lambda t: ":h {}".format(t), space_tags)))
 
-        reply = bot.create_comment(text, "vim")
+        reply = bot.create_comment(text, None, "vim")
         self.assertNotEqual(reply, '')
         for tag in backtick_tags + space_tags:
             self.assertIn(tag, reply)
 
-        reply = bot.create_comment(text, "neovim")
+        reply = bot.create_comment(text, None, "neovim")
         self.assertNotEqual(reply, '')
         for tag in backtick_tags + space_tags:
             self.assertIn(tag, reply);
@@ -144,12 +144,12 @@ class TestBot(unittest.TestCase):
         for tag, punct in zip(tags, punct):
             text = text + " :h " + tag + punct
 
-        reply = bot.create_comment(text, "vim")
+        reply = bot.create_comment(text, None, "vim")
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply)
 
-        reply = bot.create_comment(text, "neovim")
+        reply = bot.create_comment(text, None, "neovim")
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply);
@@ -160,7 +160,7 @@ class TestBot(unittest.TestCase):
         """
 
         bot = Bot()
-        reply = bot.create_comment("`:h s/\\0`", "vim")
+        reply = bot.create_comment("`:h s/\\0`", None, "vim")
         self.assertIn("https://vimhelp.org/change.txt.html#s%2F%5C0", reply)
 
     def test_neovim_index(self):
