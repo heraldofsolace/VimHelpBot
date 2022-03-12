@@ -138,13 +138,19 @@ class Bot:
         doc = match[0]
         topic = match[1]
 
+        print(subreddit)
         link = ""
         if subreddit == "vim":
             link = "https://vimhelp.org/{}.txt.html#{}".format(
                 quote(doc), quote(topic, safe=''))
         else:
-            link = "https://neovim.io/doc/user/{}.html#{}".format(
-                quote(doc), quote(topic, safe=''))
+            # Issue 40
+            if doc != "index":
+                link = "https://neovim.io/doc/user/{}.html#{}".format(
+                    quote(doc), quote(topic, safe=''))
+            else:
+                link = "https://neovim.io/doc/user/vimindex.html#{}".format(
+                    quote(topic, safe=''))
         request = requests.head(link)
 
         if request.ok:

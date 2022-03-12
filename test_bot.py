@@ -11,7 +11,7 @@ class TestBot(unittest.TestCase):
         bot = Bot()
 
         # TODO Add more tests
-        tests = ["options", "E149", ":number", ":nu", "gj", "quickfix", "%:.", "o_v", "gh"]
+        tests = ["options", "E149", ":number", ":nu", "gj", "quickfix", "%:.", "o_v", "gh", "index"]
         for t in tests:
             for subreddit in ["vim", "neovim"]:
                 result = bot.search_tag(t, subreddit)
@@ -163,6 +163,13 @@ class TestBot(unittest.TestCase):
         reply = bot.create_comment("`:h s/\\0`", "vim")
         self.assertIn("https://vimhelp.org/change.txt.html#s%2F%5C0", reply)
 
+    def test_neovim_index(self):
+        """
+        Test that index links to vimindex.html for neovim. See issue #40
+        """
+        bot = Bot()
+        reply = bot.create_comment(":h index", None, "neovim")
+        self.assertIn("https://neovim.io/doc/user/vimindex.html", reply)
 
 if __name__ == "__main__":
     unittest.main()
