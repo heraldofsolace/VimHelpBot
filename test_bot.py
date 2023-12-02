@@ -78,6 +78,28 @@ class TestBot(unittest.TestCase):
         self.assertNotEqual(reply, '')
         for tag in tags:
             self.assertIn(tag, reply)
+    
+    def test_double_backtick_comment(self):
+        """
+        Test that bot can find all backtick-style queries
+        """
+
+        bot = Bot()
+        tags = [":tab", ":options", ":tjump", "c_CTRL-R_CTRL-W",
+                ":execute", "expand()", "`["]
+
+        text = "Test comment: " + \
+            ','.join(list(map(lambda t: "``:h {}``".format(t), tags)))
+
+        reply = bot.create_comment(text, None, "vim")
+        self.assertNotEqual(reply, '')
+        for tag in tags:
+            self.assertIn(tag, reply)
+
+        reply = bot.create_comment(text, None, "neovim")
+        self.assertNotEqual(reply, '')
+        for tag in tags:
+            self.assertIn(tag, reply)
 
     def test_space_comment(self):
         """
