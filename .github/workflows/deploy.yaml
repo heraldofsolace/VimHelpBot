@@ -16,11 +16,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Setup gcloud CLI
-    - uses: google-github-actions/setup-gcloud@v0.6.2
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
       with:
-        version: '290.0.1'
-        service_account_key: ${{ secrets.GCE_SA_KEY }}
+        credentials_json: '${{ secrets.GCE_SA_KEY }}'
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v1
+      with:
         project_id: ${{ secrets.GCE_PROJECT }}
     
     - name: SSH
