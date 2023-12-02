@@ -44,6 +44,29 @@ class TestBot(unittest.TestCase):
             best_tag = next(iter(result.keys()))[1]
             self.assertEqual(best_tag, v)
 
+    def test_difficult_markdown(self):
+        """
+        Test that bot falls back to simpler formatting for difficult markdown.
+        """
+
+        tests = [
+            {"topic": ":make",           "link": r"[`:make`]"},
+            {"topic": "[I",              "link": r"[\[I]"},
+            {"topic": "[_CTRL-I",        "link": r"[\[_CTRL-I]"},
+            {"topic": "`]",              "link": r"[\`\]]"},
+            {"topic": "c_CTRL-F",        "link": r"[`c_CTRL-F`]"},
+            {"topic": "c_CTRL-G",        "link": r"[`c_CTRL-G`]"},
+            {"topic": "c_CTRL-L",        "link": r"[`c_CTRL-L`]"},
+            {"topic": "c_CTRL-R_CTRL-W", "link": r"[`c_CTRL-R_CTRL-W`]"},
+            {"topic": "pattern.txt",     "link": r"[`pattern.txt`]"},
+            {"topic": "search()",        "link": r"[`search"},
+        ]
+
+        bot = Bot()
+        for t in tests:
+            reply = bot.create_comment("`:h {}`".format(t["topic"]), None, "vim")
+            self.assertIn(t["link"], reply)
+
     def test_empty_comment(self):
         """
         Test comment is empty if nothing is found

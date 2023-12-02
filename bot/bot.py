@@ -157,7 +157,12 @@ class Bot:
         request = requests.head(link)
 
         if request.ok:
-            text += "* [`{}`]({}) in _{}.txt_\n".format(topic, link, doc)
+            escaped, count = re.subn(r"([\[\]`])", r"\\\1", topic)
+            if count > 0:
+                topic = escaped
+                text += "* [{}]({}) in _{}.txt_\n".format(topic, link, doc)
+            else:
+                text += "* [`{}`]({}) in _{}.txt_\n".format(topic, link, doc)
         return text
 
     def start(self):
