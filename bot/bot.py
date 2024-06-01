@@ -125,7 +125,7 @@ class Bot:
         # Sort by descending score
         match_scores = {k: v for k, v in sorted(
             match_scores.items(), key=lambda item: item[1], reverse=True)}
-        print(text, " => ", match_scores)
+
         return match_scores
 
     def create_link_for_tag(self, tag, possible_matches, subreddit="vim"):
@@ -156,8 +156,8 @@ class Bot:
         request = requests.head(link)
 
         if request.ok:
-            topic = topic.replace("[", "\uff3b").replace("]", "\uff3d")
-            text += "* [`{}`]({}) in _{}.txt_\n".format(topic, link, doc)
+            tag = tag.replace("[", "\uff3b").replace("]", "\uff3d")
+            text += "* [`{}`]({}) in _{}.txt_\n".format(tag, link, doc)
         return text
 
     def start(self):
