@@ -157,6 +157,7 @@ class Bot:
         request = requests.head(link)
 
         if request.ok:
+            topic = topic.replace("[", "\uff3b").replace("]", "\uff3d")
             text += "* [`{}`]({}) in _{}.txt_\n".format(topic, link, doc)
         return text
 

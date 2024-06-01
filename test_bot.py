@@ -86,7 +86,7 @@ class TestBot(unittest.TestCase):
 
         bot = Bot()
         tags = [":tab", ":options", ":tjump", "c_CTRL-R_CTRL-W",
-                ":execute", "expand()", "`["]
+                ":execute", "expand()"]
 
         text = "Test comment: " + \
             ','.join(list(map(lambda t: "``:h {}``".format(t), tags)))
@@ -191,6 +191,15 @@ class TestBot(unittest.TestCase):
         bot = Bot()
         reply = bot.create_comment(":h index", None, "neovim")
         self.assertIn("https://neovim.io/doc/user/vimindex.html", reply)
+
+    def test_square_brackets(self):
+        """
+        Test that square brackets are handled correctly
+        """
+
+        bot = Bot()
+        reply = bot.create_comment("`:h ]p`", None, "vim")
+        self.assertIn("］", reply)
 
 if __name__ == "__main__":
     unittest.main()
