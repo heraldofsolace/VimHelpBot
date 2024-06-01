@@ -62,9 +62,8 @@ class Bot:
         if subreddit not in ["vim", "neovim"]:
             subreddit = "vim"
 
+        text = text.replace('"', "quote").replace("*", "star").replace("|", "bar")
         text_escaped = text.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-        text_escaped = text_escaped.replace('"', "quote")
-
         # Get all possible matches
         possible_matches = self.cursor.execute(
             """SELECT * FROM tags WHERE tag LIKE (?) ESCAPE '\\' AND software=(?)""", ('%'+text_escaped+'%', subreddit)).fetchall()
@@ -74,7 +73,7 @@ class Bot:
         if len(possible_matches) == 0:
             return None
         possible_matches.sort(key=lambda t: len(t[1]))  # Sort by length
-        
+        print(possible_matches)
         # If there is an exact match, it might not be the first one due to case
         # We keep checking as long as the lengths match
         for match in possible_matches:
@@ -108,7 +107,7 @@ class Bot:
 
             # Extract the matched part
             matched_string = tag[match_index: match_index + len(text)]
-
+            print(matched_string)
             # How many alphanumeric characters matched exactly.
             matched_alpha_numeric_characters = 0
             for i in range(len(text)):

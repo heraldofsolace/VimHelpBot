@@ -175,6 +175,21 @@ class TestBot(unittest.TestCase):
         for tag in tags:
             self.assertIn(tag, reply);
 
+    def test_star_and_bar(self):
+        """
+        Test that bot can find tags with '*' and '|'
+        """
+
+        bot = Bot()
+        tags = ["g*", "|"]
+        text = "Test comment: " + \
+            ','.join(list(map(lambda t: "`:h {}` ".format(t), tags)))
+
+        reply = bot.create_comment(text, None, "vim")
+        self.assertNotEqual(reply, '')
+        self.assertIn("https://vimhelp.org/pattern.txt.html#gstar", reply)
+        self.assertIn("https://vimhelp.org/motion.txt.html#bar", reply)
+
     def test_url_encoding(self):
         """
         Test that bot url encodes /
