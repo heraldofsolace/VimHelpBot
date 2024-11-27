@@ -30,7 +30,7 @@ If no tag is found for a topic, it automatically creates a github issue.
 
 # Donate
 
-If my program helped you, please consider donating - 
+If my program helped you, please consider donating -
 
 <a href="https://liberapay.com/heraldofsolace/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 
